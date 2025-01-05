@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+#just a way to show that sync is in the run
+echo "== delete-objects"
+
+set -e
+
+#check for bucket name
+if [ -z "$1" ]; then
+    echo -e "A bucket name should be provided\neg: ./delete-objects bucket-name"
+    exit 1
+fi
+
+BUCKET_NAME="$1"
+
+#works this way as well---------------------------
+# DELETE_JSON=$(aws s3api list-objects-v2 \
+# --bucket $BUCKET_NAME \
+# --query Contents[].Key \
+# | jq -n '{Objects: [inputs | .[] | {Key: .}]}')
+
+# aws s3api delete-objects \
+# --bucket "$BUCKET_NAME" \
+# --delete "$DELETE_JSON"
+#-------------------------------------------------
+
+test -f /tmp/delete.json && rm -f /tmp/delete.json
+
+aws s3api list-objects-v2 \
+--bucket $BUCKET_NAME \
+--query Contents[].Key \
+| jq -n '{Objects: [inputs | .[] | {Key: .}]}' > /tmp/delete.json
+
+aws s3api delete-objects \
+--bucket "$BUCKET_NAME" \
+--delete file:///tmp/delete.json

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+echo "== put single object"
+
+#check for bucket name
+if [ -z "$1" ]; then
+    echo -e "A bucket name should be provided\neg: ./put-object bucket-name file-name"
+    exit 1
+fi
+
+#check for filename
+if [ -z "$2" ]; then
+    echo -e "Error: A file name must be provided.\neg: ./put-object bucket-name file-name"
+    exit 1
+fi
+
+BUCKET_NAME=$1
+FILENAME=$2
+FILE_BASE=$(basename "$FILENAME")
+
+aws s3api put-object \
+--bucket "$BUCKET_NAME" \
+--key "$FILE_BASE" \
+--body "$FILENAME"

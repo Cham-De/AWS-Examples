@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#check for bucket name
+if [ -z "$1" ]; then
+    echo -e "A bucket name should be provided\neg: ./list_objects bucket-name"
+    exit 1
+fi
+
+aws s3api list-objects-v2 \
+--bucket $1 
+#| jq -r '.Contents | sort_by(.LastModified) | reverse | .[] | .Key'
+

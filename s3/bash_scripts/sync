@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+#just a way to show that sync is in the run
+echo "== sync"
+
+#exit script if encountered an erraneous line
+set -e 
+
+#check for bucket name
+if [ -z "$1" ]; then
+    echo -e "A bucket name should be provided\neg: ./sync /tmp/s3-bash-scripts bucket-name"
+    exit 1
+fi
+
+# # Check for local path
+# if [ -z "$2" ]; then
+#     echo -e "Error: A bucket name must be provided.\neg: ./sync local-path bucket-name"
+#     exit 1
+# fi
+
+TARGET_DIR="/tmp/s3-bash-scripts"
+NUM_FILES=10
+FILE_SIZE=100
+test -d "$TARGET_DIR" && rm -r "$TARGET_DIR"
+mkdir -p "$TARGET_DIR"
+
+for i in $(seq 1 $NUM_FILES); do
+    FILE_NAME="file_$RANDOM.txt"
+    head -c $FILE_SIZE </dev/urandom >"$TARGET_DIR/$FILE_NAME"
+done
+
+aws s3 sync $TARGET_DIR s3://$1
