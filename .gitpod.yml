@@ -11,10 +11,7 @@ tasks:
       sudo apt-get install -y wget
       source /etc/os-release
       wget -q https://packages.microsoft.com/config/debian/$VERSION_ID/packages-microsoft-prod.deb
-      sudo dpkg -i packages-microsoft-prod.deb
-      rm packages-microsoft-prod.deb
-      sudo apt-get update
-      sudo apt-get install -y powershell
+      find / -name packages-microsoft-prod.deb -print
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
@@ -35,3 +32,8 @@ tasks:
 #     onOpen: open-preview
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
+
+# sudo dpkg -i packages-microsoft-prod.deb
+# rm packages-microsoft-prod.deb
+# sudo apt-get update
+# sudo apt-get install -y powershell
