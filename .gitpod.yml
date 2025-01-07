@@ -2,6 +2,7 @@
 tasks:
   #random utilities
   #https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian?view=powershell-7.4
+  #https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html
   - name: utils
     before: |
       sudo apt-get update
@@ -11,6 +12,9 @@ tasks:
       sudo dpkg -i powershell_7.4.6-1.deb_amd64.deb
       sudo apt-get install -f
       rm powershell_7.4.6-1.deb_amd64.deb
+      # pwsh
+      # Install-Module -Name AWS.Tools.Installer
+      # Install-AWSToolsModule AWS.Tools.S3 -CleanUp
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
