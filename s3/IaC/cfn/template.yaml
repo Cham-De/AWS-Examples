@@ -1,0 +1,7 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: A sample CloudFormation template for s3.
+Resources:
+  MyS3Bucket:
+  #doc : https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html
+    Type: AWS::S3::Bucket
+  #bucket name is not required, aws creates a unique ID for it if no name is provided
