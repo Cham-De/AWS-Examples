@@ -3,7 +3,7 @@
 #check for bucket name
 if [ -z "$1" ]; then
     echo -e "A bucket name should be provided\neg: ./create_bucket bucket-name"
-    exit 1
+    # exit 1 this causes terminal to close
 fi
 
 #https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/create-bucket.html
@@ -15,7 +15,7 @@ aws s3api create-bucket \
 --query Location \
 --output text
 
-#fine tuning the output
+#can fine tune the output like this,
 # {
 #     "Location": "http://my-new-silver-bucket-clds.s3.amazonaws.com/"
 # }
