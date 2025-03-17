@@ -1,0 +1,32 @@
+{
+    "AccessControlPolicy": {
+        "Grants": [
+            {
+                "Grantee": {
+                    "ID": "ec0ed729151b946a46f9c9be68fdd7bcffa652bc3772aacb7aeab77a945af3a3",
+                    "Type": "CanonicalUser"
+                },
+                "Permission": "FULL_CONTROL"
+            },
+            {
+                "Grantee": {
+                    "ID": "415090637fca023e3dbd51ab1eb380134a2595963ed669aefdc40a3b8fb997e0",
+                    "Type": "CanonicalUser"
+                },
+                "Permission": "READ"
+            },
+            {
+                "Grantee": {
+                    "ID": "415090637fca023e3dbd51ab1eb380134a2595963ed669aefdc40a3b8fb997e0",
+                    "Type": "CanonicalUser"
+                },
+                "Permission": "WRITE"
+            }
+        ],
+        "Owner": {
+            "DisplayName": "Chamodi_De",
+            "ID": "ec0ed729151b946a46f9c9be68fdd7bcffa652bc3772aacb7aeab77a945af3a3"
+        }
+    },
+    "Bucket": "acl-example-clds"
+}
