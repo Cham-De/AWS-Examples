@@ -1,0 +1,19 @@
+{
+    "Statement": [
+       {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::266735801350:root"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bucket-policy-example-clds/*",
+                "arn:aws:s3:::bucket-policy-example-clds"
+            ]
+       }
+    ]
+}
