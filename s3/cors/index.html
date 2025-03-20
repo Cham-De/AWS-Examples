@@ -15,23 +15,20 @@
       </style>
       <script type="text/javascript">
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "https://na187dhifl.execute-api.ap-south-1.amazonaws.com/prod/hello", true);
-
-        // Send the proper header information along with the request
+        xhr.open("POST", "https://9ez68u2ty2.execute-api.ap-south-1.amazonaws.com/prod/my-resource", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.onreadystatechange = () => {
-          // Call a function when the state changes.
-          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-            const results = JSON.parse(this.responseText);
-            console.log('results', 'results');
-          }
+    
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                const results = JSON.parse(xhr.responseText);
+                console.log('results', results);
+            }
+            else {
+            console.error("Error:", xhr.status, xhr.statusText);
+            }
         };
         xhr.send("");
-        // xhr.send(new Int8Array());
-        // xhr.send(document);
-
-      </script>
+    </script>
   </head>
   <body>
     <main>

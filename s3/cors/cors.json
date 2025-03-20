@@ -1,7 +1,7 @@
 {
     "CORSRules": [
       {
-        "AllowedOrigins": ["https://na187dhifl.execute-api.ap-south-1.amazonaws.com/prod/hello"],
+        "AllowedOrigins": ["https://9ez68u2ty2.execute-api.ap-south-1.amazonaws.com"],
         "AllowedHeaders": ["*"],
         "AllowedMethods": ["PUT", "POST", "DELETE"],
         "MaxAgeSeconds": 3000,
