@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "VPC name not provided"
+    exit 2
+else
+    vpc_name="$1"
+fi
+
+#delete the vpc by providing the tag (optional)
+VPC_ID=$(aws ec2 describe-vpcs \
+--filters "Name=tag:Name,Values=$vpc_name" \
+--query Vpcs[*].VpcId --output text)
+
+aws ec2 delete-vpc --vpc-id "$VPC_ID"
+
+## detach the igw
+
+## delete the igw
