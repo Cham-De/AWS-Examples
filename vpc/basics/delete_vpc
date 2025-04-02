@@ -1,19 +1,90 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    echo "VPC name not provided"
+set -e 
+
+#get the VPC and subnet tags
+
+if [ $# -ne 2 ]; then
+    echo "This script takes 2 arguments: VPC and subnet identification tags"
     exit 2
-else
-    vpc_name="$1"
+elif [ $# -eq 1 ]; then
+    echo "Provide subnet identification as well"
+    exit 1
 fi
 
-#delete the vpc by providing the tag (optional)
+vpc_name="$1"
+shift
+subnet_name="$1"
+
+#get ids of VPC components
+
 VPC_ID=$(aws ec2 describe-vpcs \
 --filters "Name=tag:Name,Values=$vpc_name" \
---query Vpcs[*].VpcId --output text)
+--query Vpcs[*].VpcId \
+--output text)
+
+echo "vpc id - $VPC_ID"
+
+SUBNET_ID=$(aws ec2 describe-subnets \
+--filters "Name=tag:Name,Values=$subnet_name" \
+--query "Subnets[*].SubnetId" \
+--output text)
+
+echo "subnet id - $SUBNET_ID"
+
+IGW_ID=$(aws ec2 describe-internet-gateways \
+--filters "Name=attachment.vpc-id,Values=$VPC_ID" \
+--query InternetGateways[*].InternetGatewayId \
+--output text)
+
+echo "igw id - $IGW_ID"
+
+RT_ID=$(aws ec2 describe-route-tables \
+--filters "Name=route.gateway-id,Values=$IGW_ID" \
+--query "RouteTables[*].RouteTableId" \
+--output text)
+
+echo "route table id - $RT_ID"
+
+SUBNET_ASC_ID=$(aws ec2 describe-route-tables \
+--filters "Name=association.subnet-id,Values=$SUBNET_ID" \
+--query "RouteTables[0].Associations[0].RouteTableAssociationId" \
+--output text)
+
+echo "subnet association id - $SUBNET_ASC_ID"
+
+#detach the igw
+
+aws ec2 detach-internet-gateway \
+--internet-gateway-id "$IGW_ID" \
+--vpc-id "$VPC_ID"
+
+#remove subnet association
+
+aws ec2 disassociate-route-table --association-id "$SUBNET_ASC_ID"
+
+#delete the route for IGW
+
+aws ec2 delete-route \
+--route-table-id "$RT_ID" \
+--destination-cidr-block 0.0.0.0/0
+
+#delete the igw
+
+aws ec2 delete-internet-gateway \
+--internet-gateway-id "$IGW_ID"
+
+### YOU CANNOT DELETE THE MAIN ROUTE TABLE. 
+##Every VPC has one main route table. Can only modify it. Deleting VPC will remove the route table with it 
+# #delete route table 
+
+# aws ec2 delete-route-table --route-table-id "$RT_ID"
+###------------------------------------------------------------
+
+#delete the subnet
+
+aws ec2 delete-subnet --subnet-id "$SUBNET_ID"
+
+#delete VPC
 
 aws ec2 delete-vpc --vpc-id "$VPC_ID"
-
-## detach the igw
-
-## delete the igw
