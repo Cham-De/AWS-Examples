@@ -60,6 +60,7 @@ RT_TB_ID=$(aws ec2 describe-route-tables \
 
 echo "route table id : $RT_TB_ID"
 
+## No point really associating the subent with the main route table since all subnets that are not explicitly associated with a custom route table gets implicitly associated with the main route table
 aws ec2 associate-route-table \
 --route-table-id "$RT_TB_ID" \
 --subnet-id "$SUBNET_01_ID"
