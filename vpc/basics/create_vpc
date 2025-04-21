@@ -45,7 +45,7 @@ SUBNET_01_ID=$(aws ec2 create-subnet \
 
 echo "subnet id : $SUBNET_01_ID"
 
-#Auto assign IPV4 addresses
+#Auto assign public IP addresses to network interfaces created in this subnet
 
 aws ec2 modify-subnet-attribute \
 --subnet-id "$SUBNET_01_ID" \
