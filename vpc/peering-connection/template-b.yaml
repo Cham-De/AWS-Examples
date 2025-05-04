@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Launch an EC2 instance for nacl testing with IAM role for Session Manager access
+Parameters:
+  InstanceType:
+    Type: String
+    Default: "t3.micro"
+    Description: The EC2 instance type
+  ImageID:
+    Type: String
+    Default: "ami-0e1b8bd9daef6633a"
+  SubnetID:
+    Type: String
+    Default: "subnet-008a26a85ff724749"
+    Description: The ID of the subnet where the EC2 instance will be launched
+  VPCID:
+    Type: String
+    Default: "vpc-0b7139f4bb904fc08"
+    Description: The ID of the VPC where the EC2 instance will be launched
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      VpcId: !Ref VPCID
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+  MyEC2Instance: 
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: !Ref ImageID
+      InstanceType: !Ref InstanceType
+      # The following lines are commented due to redundant usage in the NetworkInterfaces section
+      # SubnetId: !Ref SubnetID
+      # SecurityGroupIds: 
+      #   - !Ref MySecurityGroup
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !Ref SubnetID 
+          GroupSet:
+            - !Ref MySecurityGroup
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+          systemctl enable httpd
+          systemctl start httpd
+          echo "<h1>Apache Web Server is running on EC2</h1>" > /var/www/html/index.html

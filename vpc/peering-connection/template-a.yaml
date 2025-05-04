@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Launch an EC2 instance for nacl testing with IAM role for Session Manager access
+Parameters:
+  InstanceType:
+    Type: String
+    Default: "t3.micro"
+    Description: The EC2 instance type
+  ImageID:
+    Type: String
+    Default: "ami-0e1b8bd9daef6633a"
+  SubnetID:
+    Type: String
+    Default: "subnet-08e9e2e79e77bf5b0"
+    Description: The ID of the subnet where the EC2 instance will be launched
+  VPCID:
+    Type: String
+    Default: "vpc-0d7c1ee8b58d271a5"
+    Description: The ID of the VPC where the EC2 instance will be launched
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      VpcId: !Ref VPCID
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+  EC2SSMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: EC2SSMRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+  EC2SSMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2SSMRole
+  MyEC2Instance: 
+    Type: AWS::EC2::Instance
+    Properties: 
+      ImageId: !Ref ImageID
+      InstanceType: !Ref InstanceType
+      # The following lines are commented due to redundant usage in the NetworkInterfaces section
+      # SubnetId: !Ref SubnetID
+      # SecurityGroupIds: 
+      #   - !Ref MySecurityGroup
+      IamInstanceProfile: !Ref EC2SSMInstanceProfile
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !Ref SubnetID 
+          GroupSet:
+            - !Ref MySecurityGroup
+      
