@@ -1,0 +1,30 @@
+Resources:
+  MyCoolUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies: 
+        - PolicyName: MyCoolPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+                - Sid: IamListAccess
+                  Effect: Allow
+                  Action:
+                  - 'iam:ListRoles'
+                  - 'iam:ListUsers'
+                  Resource: '*'
+      UserName: MyCoolUser
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
+  MySecondPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      ManagedPolicyName: MySecondPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: 's3:*'
+            Resource: '*'
+      Users: 
+        - !Ref MyCoolUser
