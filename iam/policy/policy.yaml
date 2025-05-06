@@ -1,7 +1,8 @@
+# gives permission to - aws s3 ls
 Version: "2012-10-17"
 Statement:
   - Sid: "AccesstoS3"
     Effect: "Allow"
-    Action: "s3:ListBucket"
-    Resource: "*"
+    Action: "s3:ListAllMyBuckets"
+    Resource: "arn:aws:s3:::*"
 

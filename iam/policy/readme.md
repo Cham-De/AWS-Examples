@@ -23,6 +23,22 @@ aws iam create-policy-version \
 --policy-document file://policy.json \
 --set-as-default
 ```
+
+## List policy versions
+
+```sh
+aws iam list-policy-versions \
+--policy-arn arn:aws:iam::647264525674:policy/my-fun-policy
+```
+
+## Delete a policy version
+
+```sh
+aws iam delete-policy-version \
+--policy-arn arn:aws:iam::647264525674:policy/my-fun-policy \
+--version-id v1
+```
+
 ## Attach the policy to a user
 
 ```sh
