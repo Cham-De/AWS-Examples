@@ -1,48 +1,43 @@
-# List the start up tasks. Learn more: https://www.gitpod.io/docs/configure/workspaces/tasks
 tasks:
-  - name : cdk
-    before: |
-      npm i -g aws-cdk
-  - name: terraform
-    before: |
-      sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
-      wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-      gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
-      echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-      sudo apt update
-      sudo apt-get install terraform
-  #random utilities
-  #https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian?view=powershell-7.4
-  #https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html
-  - name: utils
-    before: |
-      sudo apt-get update
-      sudo apt-get install tree
-      sudo apt-get install -y wget
-      wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell_7.4.6-1.deb_amd64.deb
-      sudo dpkg -i powershell_7.4.6-1.deb_amd64.deb
-      sudo apt-get install -f
-      rm powershell_7.4.6-1.deb_amd64.deb
-      # pwsh
-      # Install-Module -Name AWS.Tools.Installer
-      # Install-AWSToolsModule AWS.Tools.S3 -CleanUp
-  - name: aws-cli
+  # - name : cdk
+  #   before: |
+  #     npm i -g aws-cdk
+  # - name: terraform
+  #   before: |
+  #     sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+  #     wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+  #     gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
+  #     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+  #     sudo apt update
+  #     sudo apt-get install terraform
+  # - name: utils
+    # before: |
+    #   sudo apt-get update
+    #   sudo apt-get install tree
+    #   sudo apt-get install -y wget
+    #   wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell_7.4.6-1.deb_amd64.deb
+    #   sudo dpkg -i powershell_7.4.6-1.deb_amd64.deb
+    #   sudo apt-get install -f
+    #   rm powershell_7.4.6-1.deb_amd64.deb
+    #   # pwsh
+    #   # Install-Module -Name AWS.Tools.Installer
+    #   # Install-AWSToolsModule AWS.Tools.S3 -CleanUp
+    #   #random utilities
+    #   #https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian?view=powershell-7.4
+    #   #https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html
+  - name: aws-cli-sam-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
     before: |
       cd /workspace
       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      wget "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip"
       unzip awscliv2.zip
+      unzip aws-sam-cli-linux-x86_64.zip -d sam-installation
       sudo ./aws/install
+      sudo ./sam-installation/install
+      sudo rm -rf aws-sam-cli-linux-x86_64.zip awscliv2.zip
       cd $THEIA_WORKSPACE_ROOT
-    # init: echo 'init script' # runs during prebuild => https://www.gitpod.io/docs/configure/projects/prebuilds
-    # command: echo 'start script'
-
-# List the ports to expose. Learn more: https://www.gitpod.io/docs/configure/workspaces/ports
-# ports:
-#   - name: Frontend
-#     description: Port 3000 for the frontend
-#     port: 3000
-#     onOpen: open-preview
-
-# Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
+    
+# init: echo 'init script' # runs during prebuild => https://www.gitpod.io/docs/configure/projects/prebuilds
+# command: echo 'start script'
